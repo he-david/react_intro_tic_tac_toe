@@ -1,39 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
+import Board from './components/board';
 import './index.css';
-
-function Square() {
-    return (
-        <button className="square">
-            {/*TODO*/}
-        </button>
-    );
-}
-
-function Board() {
-    const [status, setStatus] = useState("Next player: X");
-
-    return (
-        <div>
-            <div className="status">{status}</div>
-            <div className="board-row">
-                <Square />
-                <Square />
-                <Square />
-            </div>
-            <div className="board-row">
-                <Square />
-                <Square />
-                <Square />
-            </div>
-            <div className="board-row">
-                <Square />
-                <Square />
-                <Square />
-            </div>
-        </div>
-    );
-}
 
 function Game() {
     return ( 
