@@ -7,7 +7,10 @@ import './index.css';
 function Game() {
 
     const [status, setStatus] = useState("Next player: X");
-    const [history, setHistory] = useState([{squares: Array(9).fill(null)}]);
+    const [history, setHistory] = useState([{
+        squares: Array(9).fill(null),
+        location: null 
+    }]);
     const [xIsNext, setXIsNext] = useState(true);
     const [stepNumber, setStepNumber] = useState(0);
 
@@ -44,7 +47,8 @@ function Game() {
         const newStatus = winner ? `Winner: ${winner}` : `Next player: ${xIsNext ? 'O' : 'X'}`;
 
         setHistory(historyCopy.concat([{
-            squares: squaresCopy
+            squares: squaresCopy,
+            location: i
         }]));
         setXIsNext(!xIsNext);
         setStatus(newStatus);
@@ -71,9 +75,9 @@ function Game() {
             <div className="game-info">
                 <div>{ status }</div>
                 <ol>{
-                    history.map((_, move) => {
-                        const desc = move ? "Go to move #" + move : "Go to game start"; // 0 -> false
-                        return <Move key={move} onClick={ () => jumpTo(move) } desc={ desc }/>
+                    history.map((step, move) => {
+                        const desc = move ? `Go to move #${move} (${Math.floor(step.location / 3) + 1}, ${(step.location % 3) + 1})` : "Go to game start"; // 0 -> false
+                        return <Move className={move === stepNumber ? "selected-history" : ""} key={move} onClick={ () => jumpTo(move) } desc={ desc }/>
                     }) 
                 }</ol>
             </div>
