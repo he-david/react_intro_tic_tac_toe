@@ -8,6 +8,7 @@ function Board(props) {
             <Square
                 key={i}
                 value={ props.squares[i] }
+                className={ props.highlighted?.includes(i) ? 'highlighted' : '' }
                 onClick={ () => props.onClick(i) }
             />
         );

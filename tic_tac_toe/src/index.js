@@ -9,7 +9,8 @@ function Game() {
     const [status, setStatus] = useState("Next player: X");
     const [history, setHistory] = useState([{
         squares: Array(9).fill(null),
-        location: null 
+        location: null,
+        highlighted: null
     }]);
     const [xIsNext, setXIsNext] = useState(true);
     const [stepNumber, setStepNumber] = useState(0);
@@ -29,7 +30,7 @@ function Game() {
             const [a, b, c] = lines[i];
 
             if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-                return squares[a];
+                return [squares[a], lines[i]];
             }
         }
         return null;
@@ -44,20 +45,34 @@ function Game() {
         }
         squaresCopy[i] = xIsNext ? 'X' : 'O';
         const winner = calculateWinner(squaresCopy);
-        const newStatus = winner ? `Winner: ${winner}` : `Next player: ${xIsNext ? 'O' : 'X'}`;
+        const newStatus = winner ? `Winner: ${winner[0]}` : `Next player: ${xIsNext ? 'O' : 'X'}`;
 
-        setHistory(historyCopy.concat([{
-            squares: squaresCopy,
-            location: i
-        }]));
+        if (winner) {
+            setHistory(historyCopy.concat([{
+                squares: squaresCopy,
+                location: i,
+                highlighted: winner[1]
+            }]));
+        } else {
+            setHistory(historyCopy.concat([{
+                squares: squaresCopy,
+                location: i,
+                highlighted: null
+            }]));
+        }
         setXIsNext(!xIsNext);
         setStatus(newStatus);
         setStepNumber(historyCopy.length);
+
+        if (!winner && 8 === historyCopy[historyCopy.length - 1].squares.filter(square => square !== null).length) {
+            setStatus("Draw");
+            return
+        }
     }
 
     const jumpTo = (step) => {
         const winner = calculateWinner([...history[step].squares]);
-        const newStatus = winner ? `Winner: ${winner}` : `Next player: ${step % 2 === 0 ? 'X' : 'O'}`;
+        const newStatus = winner ? `Winner: ${winner[0]}` : `Next player: ${step % 2 === 0 ? 'X' : 'O'}`;
 
         setStepNumber(step);
         setXIsNext(step % 2 === 0);
@@ -69,6 +84,7 @@ function Game() {
             <div className="game-board">
                 <Board 
                     squares={ history[stepNumber].squares}
+                    highlighted={ history[stepNumber].highlighted }
                     onClick={ (i) => handleClick(i) }
                 />
             </div>

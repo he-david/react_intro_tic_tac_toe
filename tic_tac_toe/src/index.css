@@ -52,3 +52,7 @@ body {
   .selected-history {
     font-weight: bold;
   }
+
+  .highlighted {
+    background-color: yellowgreen;
+  }
